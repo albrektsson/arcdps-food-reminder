@@ -5,6 +5,7 @@ mod combo_ui;
 mod data;
 mod plugin;
 mod reminder;
+mod table_icon;
 mod tracking;
 mod util;
 
@@ -33,7 +34,7 @@ arcdps::export! {
     extras_squad_update,
 }
 
-fn init() -> Result<(), String> {
+fn init() -> Result<(), Option<String>> {
     // TODO: use error
     Plugin::lock().load();
     Ok(())

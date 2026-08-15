@@ -7,8 +7,16 @@ repository = "https://github.com/zerthox/arcdps-food-reminder"
 rust-version = "1.82.0"
 
 [dependencies]
-arc_util = { git = "https://github.com/zerthox/arcdps-utils", features = ["serde", "settings"] }
-arcdps = { git = "https://github.com/zerthox/arcdps-rs", features = ["extras", "log", "serde", "strum"] }
+arc_util = { git = "https://github.com/cheahjs/arcdps-utils", rev = "7f9f121bdd0fa7c704d920d0461eb060dfc186b3", features = [
+    "serde",
+    "settings",
+] }
+arcdps = { git = "https://github.com/cheahjs/Zerthox-arcdps-bindings", branch = "bump-imgui-1.92.7", features = [
+    "extras",
+    "log",
+    "serde",
+    "strum",
+] }
 gw2_mumble = { git = "https://github.com/zerthox/gw2-mumble-rs" }
 include_img = { git = "https://github.com/zerthox/include-img" }
 jsonc-parser = { version = "0.26.2", features = ["serde"] }
@@ -19,9 +27,10 @@ semver = { version = "1.0.16", features = ["serde"] }
 serde = { version = "1.0.152", features = ["derive"] }
 serde_json = "1.0.92"
 strum = { version = "0.27.1", features = ["derive"] }
-windows = { version = "0.59.0", features = [
+windows = { version = "0.62.1", features = [
     "System",
     "Win32_Graphics",
+    "Win32_Graphics_Direct3D",
     "Win32_Graphics_Dxgi_Common",
 ] }
 

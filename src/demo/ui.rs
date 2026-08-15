@@ -13,7 +13,7 @@ use arc_util::{
     ui::{render, Component, Hideable, Windowable},
 };
 use arcdps::{
-    imgui::{Selectable, StyleColor, TableColumnSetup, Ui},
+    imgui::{StyleColor, TableColumnSetup, Ui},
     Profession, Specialization,
 };
 use std::borrow::Cow;
@@ -45,9 +45,10 @@ impl Demo {
                 let style = data
                     .and_then(|data| data.rarity.color())
                     .map(|color| ui.push_style_color(StyleColor::Text, color));
-                if Selectable::new(item_label(entry))
+                if ui
+                    .selectable_config(item_label(entry))
                     .selected(selected)
-                    .build(ui)
+                    .build()
                 {
                     result = Some(entry);
                 }

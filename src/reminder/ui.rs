@@ -42,7 +42,7 @@ impl Reminder {
         // adjust cursor to center text
         let [cursor_x, cursor_y] = ui.cursor_pos();
         let [text_width, _] = ui.calc_text_size(text);
-        let window_width = ui.window_content_region_width();
+        let window_width = ui.content_region_avail()[0];
         ui.set_cursor_pos([cursor_x + 0.5 * (window_width - text_width), cursor_y]);
 
         // render text
@@ -71,7 +71,7 @@ impl Component<()> for Reminder {
             let [screen_width, screen_height] = ui.io().display_size;
 
             // render "invisible" window with text
-            imgui::Window::new("##food-reminder-reminder")
+            ui.window("##food-reminder-reminder")
                 .position(
                     [0.5 * screen_width, self.settings.position * screen_height],
                     Condition::Always,
@@ -84,7 +84,7 @@ impl Component<()> for Reminder {
                 .no_inputs()
                 .movable(false)
                 .focus_on_appearing(false)
-                .build(ui, || {
+                .build(|| {
                     ui.set_window_font_scale(FONT_SIZE);
 
                     // food/util

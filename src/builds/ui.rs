@@ -4,15 +4,12 @@ use crate::{
     buff_ui,
     combo_ui::render_prof_select,
     data::{DefinitionKind, Definitions},
+    table_icon::{self, TableIconColumn},
     tracking::buff::BuffState,
 };
 use arc_util::{
     colors::{GREEN, RED},
-    ui::{
-        action::Action,
-        render::{self, TableIconColumn},
-        Component, Ui,
-    },
+    ui::{action::Action, render, Component, Ui},
 };
 use arcdps::{
     exports::{self, CoreColor},
@@ -54,7 +51,7 @@ impl Builds {
             vec![build_column, food_column, util_column]
         };
 
-        if let Some(_table) = render::table_with_icons(
+        if let Some(_table) = table_icon::table_with_icons(
             ui,
             "##builds-table",
             &columns,
@@ -138,7 +135,7 @@ impl Builds {
     /// Renders edit mode contents.
     fn render_edit(&mut self, ui: &Ui, defs: &Definitions, show_icons: bool) {
         // render builds table
-        if let Some(_table) = render::table_with_icons(
+        if let Some(_table) = table_icon::table_with_icons(
             ui,
             "##builds-table",
             &[

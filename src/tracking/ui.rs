@@ -12,14 +12,12 @@ use crate::{
         UNKNOWN_STATE_TEXT,
     },
     reminder::custom::CustomReminder,
+    table_icon::{self, TableIconColumn},
 };
 use arc_util::{
     colors::{GREEN, RED, YELLOW},
     tracking::Entry,
-    ui::{
-        render::{self, TableIconColumn},
-        Component, Windowable,
-    },
+    ui::{render, Component, Windowable},
 };
 use arcdps::{
     exports::{self, CoreColor},
@@ -280,7 +278,7 @@ impl Tracker {
             ];
             let columns = if show_sub { &columns } else { &columns[1..] };
 
-            if let Some(_table) = render::table_with_icons_sizing(
+            if let Some(_table) = table_icon::table_with_icons_sizing(
                 ui,
                 "##squad-table",
                 columns,
@@ -342,7 +340,7 @@ impl Tracker {
 
         if current.is_none() && !self.players.cached() {
             ui.text("No characters found");
-        } else if let Some(_table) = render::table_with_icons_sizing(
+        } else if let Some(_table) = table_icon::table_with_icons_sizing(
             ui,
             "##self-table",
             &[

@@ -2,7 +2,7 @@ use crate::data::PROFESSIONS;
 use arc_util::ui::render;
 use arcdps::{
     exports,
-    imgui::{Selectable, StyleColor, Ui},
+    imgui::{StyleColor, Ui},
     Profession,
 };
 use std::borrow::Cow;
@@ -29,9 +29,10 @@ where
             // apply color to selectable
             let style =
                 item_color(&entry).map(|color| ui.push_style_color(StyleColor::Text, color));
-            if Selectable::new(item_label(&entry))
+            if ui
+                .selectable_config(item_label(&entry))
                 .selected(selected)
-                .build(ui)
+                .build()
             {
                 changed = true;
                 *current = entry;

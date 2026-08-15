@@ -2,7 +2,7 @@ use crate::data::BuffData;
 use arc_util::ui::{render, Ui};
 use arcdps::{
     exports::{self, CoreColor},
-    imgui::{Selectable, StyleColor},
+    imgui::StyleColor,
 };
 
 /// Renders a tooltip for a buff.
@@ -109,7 +109,7 @@ pub fn render_buff_combo<'b>(
                 .rarity
                 .color()
                 .map(|color| ui.push_style_color(StyleColor::Text, color));
-            if Selectable::new(&entry.name).selected(selected).build(ui) {
+            if ui.selectable_config(&entry.name).selected(selected).build() {
                 result = Some(entry);
             }
             drop(style);

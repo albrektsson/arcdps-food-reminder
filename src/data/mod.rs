@@ -74,7 +74,7 @@ impl Definitions {
     }
 
     /// Returns the kind for the given buff id & name.
-    pub fn buff_kind(&self, id: u32, name: Option<&str>) -> BuffKind {
+    pub fn buff_kind(&self, id: u32, name: Option<&str>) -> BuffKind<'_> {
         if let Some(def) = self.definition(id) {
             match def {
                 DefinitionKind::Food(data) => BuffKind::Food(Some(data)),

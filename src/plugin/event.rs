@@ -72,34 +72,34 @@ impl Plugin {
                         plugin.reminder.end_encounter(&plugin.tracker.players);
                     }
 
-                    StateChange::None | StateChange::ApiDelayed | StateChange::BuffInitial => {
-                        if event.get_activation() == Activation::None {
-                            match event.get_buffremove() {
-                                BuffRemove::None => {
-                                    if event.buff != 0 && event.buff_dmg == 0 {
-                                        if let Some(dst) = dst {
-                                            Self::lock().buff_apply(
-                                                dst.id,
-                                                event.skill_id,
-                                                skill_name,
-                                                event,
-                                                event_id,
-                                            );
-                                        }
+                    StateChange::None | StateChange::ApiDelayed | StateChange::BuffInitial
+                        if event.get_activation() == Activation::None =>
+                    {
+                        match event.get_buffremove() {
+                            BuffRemove::None => {
+                                if event.buff != 0 && event.buff_dmg == 0 {
+                                    if let Some(dst) = dst {
+                                        Self::lock().buff_apply(
+                                            dst.id,
+                                            event.skill_id,
+                                            skill_name,
+                                            event,
+                                            event_id,
+                                        );
                                     }
                                 }
-
-                                // remove on all or single manual
-                                BuffRemove::All | BuffRemove::Manual => Self::lock().buff_remove(
-                                    src.id,
-                                    event.skill_id,
-                                    skill_name,
-                                    event,
-                                    event_id,
-                                ),
-
-                                BuffRemove::Single | BuffRemove::Unknown(_) => {}
                             }
+
+                            // remove on all or single manual
+                            BuffRemove::All | BuffRemove::Manual => Self::lock().buff_remove(
+                                src.id,
+                                event.skill_id,
+                                skill_name,
+                                event,
+                                event_id,
+                            ),
+
+                            BuffRemove::Single | BuffRemove::Unknown(_) => {}
                         }
                     }
                     _ => {}

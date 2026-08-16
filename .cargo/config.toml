@@ -1,2 +1,26 @@
 [target.x86_64-pc-windows-gnu]
 linker = "x86_64-w64-mingw32-gcc"
+
+# Static-link the MinGW runtime so arcdps_food_reminder.dll only depends on stock
+# Windows DLLs. Without this, a normal Windows install has no libstdc++-6.dll
+# (needed by arcdps-imgui's vendored C++ code).
+#
+# Plain `-static-libgcc -static-libstdc++` doesn't work: rustc's link
+# template reopens `-Wl,-Bdynamic` after the system libs, so a bare `-static`
+# placed later has no effect - we have to reopen `-Wl,-Bstatic` ourselves.
+# The four static libs go in one `--start-group`/`--end-group` because
+# libwinpthread's thread-cleanup code needs a libmingwex symbol resolved in
+# the same pass, not linked separately afterward. `-Wl,-Bdynamic` at the end
+# restores dynamic linking for msvcrt/kernel32, which is fine since those are
+# always present.
+rustflags = [
+  "-C", "link-args=-Wl,-Bstatic",
+  "-C", "link-args=-Wl,--start-group -lstdc++ -lwinpthread -lgcc -lgcc_eh -lmingwex -Wl,--end-group",
+  "-C", "link-args=-Wl,-Bdynamic -lmsvcrt -lkernel32",
+]
+
+# Without this, arcdps-imgui-sys's build script (via the `cc` crate) emits
+# its own dynamic `-lstdc++`, pulling libstdc++-6.dll back in regardless of
+# the static link above.
+[env]
+CXXSTDLIB = ""

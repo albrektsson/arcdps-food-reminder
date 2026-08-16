@@ -10,6 +10,13 @@ use arcdps::{
 };
 use log::{debug, info, log_enabled, Level};
 
+/// Raw `StateChange` byte values for buff apply/change/remove, added to ArcDPS's realtime API
+/// after this plugin's pinned `evtc` fork branched off - see the match arm below.
+const BUFF_APPLY: u8 = 69;
+const BUFF_CHANGE: u8 = 70;
+const BUFF_REMOVE_SINGLE: u8 = 71;
+const BUFF_REMOVE_ALL: u8 = 72;
+
 impl Plugin {
     /// Handles a combat event from area stats.
     pub fn area_event(
@@ -28,6 +35,7 @@ impl Plugin {
             // check for combat event
             if let Some(event) = event {
                 let statechange = event.get_statechange();
+
                 match statechange {
                     StateChange::SquadCombatStart => {
                         let mut guard = Self::lock();
@@ -102,6 +110,35 @@ impl Plugin {
                             BuffRemove::Single | BuffRemove::Unknown(_) => {}
                         }
                     }
+
+                    // Dedicated buff state changes ArcDPS's current realtime API reports buff
+                    // apply/change/remove under (BuffApply=69, BuffChange=70,
+                    // BuffRemoveSingle=71, BuffRemoveAll=72), replacing the
+                    // None/ApiDelayed/BuffInitial + Activation::None + BuffRemove-byte scheme
+                    // handled above. Our pinned `evtc` fork predates these variants, so they
+                    // only surface via the `Unknown(u8)` catch-all.
+                    StateChange::Unknown(BUFF_APPLY) | StateChange::Unknown(BUFF_CHANGE) => {
+                        if let Some(dst) = dst {
+                            Self::lock().buff_apply(
+                                dst.id,
+                                event.skill_id,
+                                skill_name,
+                                event,
+                                event_id,
+                            );
+                        }
+                    }
+                    StateChange::Unknown(BUFF_REMOVE_SINGLE)
+                    | StateChange::Unknown(BUFF_REMOVE_ALL) => {
+                        Self::lock().buff_remove(
+                            src.id,
+                            event.skill_id,
+                            skill_name,
+                            event,
+                            event_id,
+                        );
+                    }
+
                     _ => {}
                 }
 

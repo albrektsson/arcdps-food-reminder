@@ -106,15 +106,6 @@ impl<'i, Name> TableIconColumn<'i, Name> {
     }
 }
 
-impl<N> Default for TableIconColumn<'_, N>
-where
-    N: Default,
-{
-    fn default() -> Self {
-        Self::new(Default::default(), None)
-    }
-}
-
 /// Renders a table header with icon.
 fn table_header_icon(ui: &Ui, label: impl AsRef<str>, icon: Option<&Icon>) {
     let label = label.as_ref();
